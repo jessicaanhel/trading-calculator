@@ -1,7 +1,7 @@
 import ccxt
 import numpy as np
 
-# Binance
+# Binance api keys
 api_key = ""
 api_secret = ""
 
@@ -11,24 +11,26 @@ exchange = ccxt.binance({
     "enableRateLimit": True
 })
 
-# Trade FUTURE settings
+# Parameters
 symbol = "BTC/USDT"
-amount = 0.001       # ammount of symbol per order
-min_price = 65300    # min expected price
-max_price = 65800    # max expected price
-atr = 380            # ATR for take-profit
+amount = 0.001       # amount of symbol to buy
+min_price = 65300
+max_price = 65800
+atr = 380
 num_orders = 10
-k_tp = 1.5           # take-profit %
+k_tp = 1.5           # TP %
+k_sl = 1.0           # SL %
 
-# Generate order levels and TP
+
 order_step = (max_price - min_price) / num_orders
 order_levels = np.arange(min_price, max_price, order_step)
 take_profits = order_levels + atr * k_tp
+stop_losses = order_levels - atr * k_sl
 
-# Realize orders by API
+# Orders placement
 for i, level in enumerate(order_levels):
     try:
-        # Limit buy order
+        # Limit order
         order = exchange.create_limit_buy_order(
             symbol=symbol,
             amount=amount,
@@ -44,5 +46,18 @@ for i, level in enumerate(order_levels):
             price=tp_price
         )
         print(f"Take-Profit {i+1} placed at {tp_price:.2f}")
+
+        # Set SL
+        sl_price = stop_losses[i]
+        sl_order = exchange.create_order(
+            symbol=symbol,
+            type='stop_loss_limit',  # Order typr
+            side='sell',
+            amount=amount,
+            price=sl_price,  # activation price
+            params={'stopPrice': sl_price}  # activation price for stop_loss
+        )
+        print(f"Stop-Loss {i+1} placed at {sl_price:.2f}")
+
     except Exception as e:
         print(f"Error placing order {i+1}: {e}")
