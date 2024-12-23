@@ -11,17 +11,19 @@ if TELEGRAM_BOT_TOKEN is not None:
 else:
     print("TELEGRAM_ANGEL_TOKEN is None")
 
-# Extended Function Conversation Handler
-conv_handler_extended = ConversationHandler(
-    entry_points=[CommandHandler("start", start_command)],
-    states={
-        ASK_PARAM1: [MessageHandler(filters.TEXT, ask_param1_extended)],
-        ASK_PARAM2: [MessageHandler(filters.TEXT, ask_param2_extended)],
-        ASK_PARAM3: [MessageHandler(filters.TEXT, ask_param3_extended)],
-        ASK_PARAM4: [MessageHandler(filters.TEXT, ask_param4_extended)],
-    },
-    fallbacks=[],
-)
+extended_function = True
+
+# if extended_function:
+#     conv_handler_extended = ConversationHandler(
+#         entry_points=[CommandHandler("start", start_command)],
+#         states={
+#             ASK_PARAM1: [MessageHandler(filters.TEXT, ask_param1_extended)],
+#             ASK_PARAM2: [MessageHandler(filters.TEXT, ask_param2_extended)],
+#             ASK_PARAM3: [MessageHandler(filters.TEXT, ask_param3_extended)],
+#             ASK_PARAM4: [MessageHandler(filters.TEXT, ask_param4_extended)],
+#         },
+#         fallbacks=[],
+#     )
 
 # Empty Function Conversation Handler
 conv_handler_empty = ConversationHandler(
@@ -36,10 +38,11 @@ conv_handler_empty = ConversationHandler(
 def main():
     application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
 
-    # Add both conversation handlers
-    application.add_handler(conv_handler_extended)  # For extended function
-    application.add_handler(conv_handler_empty)     # For empty function
-    application.add_handler(CallbackQueryHandler(inline_button_handler))  # Handle inline button clicks
+    # if extended_function:
+    #     application.add_handler(conv_handler_extended)
+
+    application.add_handler(conv_handler_empty)
+    application.add_handler(CallbackQueryHandler(inline_button_handler))
 
     application.run_polling()
 

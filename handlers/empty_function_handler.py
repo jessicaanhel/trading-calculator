@@ -9,7 +9,7 @@ async def ask_param1_empty_function(update: Update, context):
     if update.message.text.lower() == "/start":
         # Reset conversation if /start is typed
         await start_command(update, context)
-        return ASK_PARAM1
+        return EMPTY_FUNCTION_1
 
     try:
         print("empty begin")

@@ -8,13 +8,14 @@
 #         await update.message.reply_text("You are about to start Empty Function 1. Please enter the first parameter.")
 #         return EMPTY_FUNCTION_1  # This will start the flow for empty_function_1
 #
-#     # Alternatively, if you're starting an extended function flow, return its entry state
 #     await update.message.reply_text("Choose an option:")
 #     return ASK_PARAM1  # This would start the flow for extended function if that's what you want
+from distutils.command.check import check
+
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 
-from utils.constants import ASK_PARAM1
+from utils.constants import ASK_PARAM1, EMPTY_FUNCTION_1
 
 
 async def start_command(update, context):
@@ -26,4 +27,5 @@ async def start_command(update, context):
 
     keyboard = InlineKeyboardMarkup([[button1, button2, button3]])
     await update.message.reply_text("Choose an option:", reply_markup=keyboard)
-    return ASK_PARAM1
+    print(context.chat_data)
+    return EMPTY_FUNCTION_1
