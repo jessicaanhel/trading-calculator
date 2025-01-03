@@ -10,12 +10,8 @@
 #
 #     await update.message.reply_text("Choose an option:")
 #     return ASK_PARAM1  # This would start the flow for extended function if that's what you want
-from distutils.command.check import check
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-
-
-from utils.constants import ASK_PARAM1, EMPTY_FUNCTION_1
 
 
 async def start_command(update, context):
@@ -28,4 +24,3 @@ async def start_command(update, context):
     keyboard = InlineKeyboardMarkup([[button1, button2, button3]])
     await update.message.reply_text("Choose an option:", reply_markup=keyboard)
     print(context.chat_data)
-    return EMPTY_FUNCTION_1

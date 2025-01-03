@@ -1,8 +1,9 @@
 from telegram import Update
-from telegram.ext import ConversationHandler
+from telegram.ext import ConversationHandler, CallbackQueryHandler, MessageHandler, filters
 from functions.empty_function_1.bot import empty_function_1
+# from handlers.inline_handler import inline_button_handler
 from handlers.start_handler import start_command
-from utils.constants import EMPTY_FUNCTION_1, EMPTY_FUNCTION_2, ASK_PARAM1
+from utils.constants import EMPTY_FUNCTION_1, EMPTY_FUNCTION_2
 
 
 async def ask_param1_empty_function(update: Update, context):
@@ -30,7 +31,7 @@ async def ask_param2_empty_function(update: Update, context):
     if update.message.text.lower() == "/start":
         # Reset conversation if /start is typed
         await start_command(update, context)
-        return ASK_PARAM1
+        return ConversationHandler.END
 
     try:
         context.user_data['param2'] = float(update.message.text)  # Convert the input to float
@@ -48,3 +49,13 @@ async def ask_param2_empty_function(update: Update, context):
     # Notify user that the function has been executed
     await update.message.reply_text(f"Empty_Function_1 executed with param1={param1} and param2={param2}.")
     return ConversationHandler.END
+
+conv_handler_empty = ConversationHandler(
+    entry_points=[MessageHandler(filters.TEXT, ask_param1_empty_function)],
+    # entry_points=[CallbackQueryHandler(inline_button_handler, pattern="^empty_function_1$")],
+    states={
+        EMPTY_FUNCTION_1: [MessageHandler(filters.TEXT, ask_param1_empty_function)],
+        EMPTY_FUNCTION_2: [MessageHandler(filters.TEXT, ask_param2_empty_function)],
+    },
+    fallbacks=[],
+)
