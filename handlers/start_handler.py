@@ -1,26 +1,20 @@
-# from telegram import Update
-# from telegram.ext import CallbackContext
-# from utils.constants import EMPTY_FUNCTION_1, ASK_PARAM1
-#
-# async def start_command(update: Update, context: CallbackContext):
-#     i = 0
-#     if i == 1:
-#         await update.message.reply_text("You are about to start Empty Function 1. Please enter the first parameter.")
-#         return EMPTY_FUNCTION_1  # This will start the flow for empty_function_1
-#
-#     await update.message.reply_text("Choose an option:")
-#     return ASK_PARAM1  # This would start the flow for extended function if that's what you want
-
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup
+from telegram.ext import ConversationHandler
 
 
 async def start_command(update, context):
-    context.user_data.clear()
-    context.chat_data.clear()
+    user_name = update.effective_user.first_name
+
     button1 = InlineKeyboardButton(text="Run my extended function", callback_data="run_extended_function")
     button2 = InlineKeyboardButton(text="Empty Function 1", callback_data="empty_function_1")
     button3 = InlineKeyboardButton(text="Empty Function 2", callback_data="empty_function_2")
 
-    keyboard = InlineKeyboardMarkup([[button1, button2, button3]])
-    await update.message.reply_text("Choose an option:", reply_markup=keyboard)
-    print(context.chat_data)
+    inline_keyboard = [[button1, button2], [button3]]
+    inline_markup = InlineKeyboardMarkup(inline_keyboard)
+
+    await update.message.reply_text(
+        f"Hello, {user_name}! Welcome to your coin angel. Make your choice:",
+        reply_markup=inline_markup
+    )
+
+    return ConversationHandler.END
